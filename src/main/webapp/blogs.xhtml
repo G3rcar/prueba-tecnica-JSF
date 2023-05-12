@@ -1,10 +1,86 @@
 <?xml version='1.0' encoding='UTF-8' ?>
 <!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-                template="./main.xhtml">
+                template="./main.xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
 
     <ui:define name="content">
-        The blogs
+        
+        <p:layout style="min-width:400px;height:100vh;">
+            <p:layoutUnit position="west" size="450">
+                <div style="padding:20px">
+                    <h:form id="blogContainer">
+                        <p:panelGrid >
+                            <f:facet name="header">
+                                <h1>Agregar/editar Blog</h1>
+                            </f:facet>
+                            <br />
+
+                            <p:outputLabel value="Titulo:"/>
+                            <br />
+                            <p:inputText value="#{blogsController.blog.title}" style='width:100%' />
+                            <br/>
+                            <br/>
+                            <p:outputLabel value="Contenido:"/>
+                            <br />
+                            <p:inputTextarea rows="10" value="#{blogsController.blog.description}" style='width:100%' />
+
+                            <br />
+                            <br />
+                            <p:commandButton value="Guardar" action="#{blogsController.save()}" update=":grid-table blogContainer" />
+                            <p:commandButton value="Cancelar" action="#{blogsController.clean()}" update=":blogContainer"/>
+                        </p:panelGrid>
+                    </h:form>
+                </div>
+            </p:layoutUnit>
+
+            <p:layoutUnit position="center">
+                <p:dataTable value="#{blogsController.blogsList}" var="item" id="grid-table" rows="10" paginator="true"
+                 paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                 currentPageReportTemplate="{startRecord}-{endRecord} of {totalRecords} records"
+                 rowsPerPageTemplate="5,10,15">
+
+                    <p:column headerText="No." style="width:20px">
+                        <h:outputText value="#{item.id}" />
+                    </p:column>
+                    <p:column headerText="Nombre">
+                        <h:outputText value="#{item.title}" />
+                    </p:column>
+                    <p:column headerText="Acciones" style="width:100px">
+                        <p:commandButton action="#{blogsController.edit(item)}" id="editReader" update="blogContainer" icon="pi pi-pencil" title="Editar" />
+                        <p:commandButton oncomplete="PF('deleteModal').show()" id="deleteReader" update="frmDelete" icon="pi pi-times" title="Borrar" >
+                            <f:setPropertyActionListener target="#{blogsController.blog}" value="#{item}"/>
+                        </p:commandButton>
+                    </p:column>
+                </p:dataTable>
+            </p:layoutUnit>
+        </p:layout>
+        
+                    
+
+                    
+         
+                    
+        
+            
+        
+        
+    </ui:define>
+    
+    
+    
+    <ui:define name="modals">
+
+        <h:form id="frmDelete">
+            <p:dialog id="deleteModal" header="Borrar" widgetVar="deleteModal" resizable="false" modal="true">
+                <h3>¿Desea borrar este blog?</h3>
+                <br />
+                <p:commandButton  value="Si" actionListener="#{blogsController.delete()}" update=":grid-table" oncomplete="PF('deleteModal').hide();"/>
+                <p:commandButton  value="No" onclick="PF('deleteModal').hide();"/>
+            </p:dialog>
+        </h:form>
     </ui:define>
 
 </ui:composition>

@@ -33,10 +33,12 @@ import javax.xml.bind.annotation.XmlRootElement;
 public class Users implements Serializable {
 
     private static final long serialVersionUID = 1L;
+    
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
-    @Column(name = "id")
+    @Column(nullable = false, name = "id")
     private Integer id;
     @Size(max = 20)
     @Column(name = "username")

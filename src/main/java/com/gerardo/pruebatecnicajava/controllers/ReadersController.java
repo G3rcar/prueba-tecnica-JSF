@@ -20,7 +20,7 @@ import javax.inject.Named;
  */
 @Named
 @ViewScoped
-public class ManagedReaders implements Serializable {
+public class ReadersController implements Serializable {
     
     @EJB
     private ReadersFacadeLocal readersFL;

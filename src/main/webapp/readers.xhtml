@@ -19,19 +19,20 @@
                             <br />
 
                             <p:outputLabel value="Nombre:"/>
-                            <p:inputText value="#{managedReaders.reader.name}"/>
+                            <br/>
+                            <p:inputText value="#{readersController.reader.name}" style='width:100%' />
 
                             <br />
                             <br />
-                            <p:commandButton value="Guardar" action="#{managedReaders.save()}" update=":grid-table :readerContainer" />
-                            <p:commandButton value="Cancelar" action="#{managedReaders.clean()}" update=":readerContainer"/>
+                            <p:commandButton value="Guardar" action="#{readersController.save()}" update=":grid-table :readerContainer" />
+                            <p:commandButton value="Cancelar" action="#{readersController.clean()}" update=":readerContainer"/>
                         </p:panelGrid>
                     </h:form>
                 </div>
             </p:layoutUnit>
 
             <p:layoutUnit position="center">
-                <p:dataTable value="#{managedReaders.readersList}" var="item" id="grid-table" rows="10" paginator="true"
+                <p:dataTable value="#{readersController.readersList}" var="item" id="grid-table" rows="10" paginator="true"
                  paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
                  currentPageReportTemplate="{startRecord}-{endRecord} of {totalRecords} records"
                  rowsPerPageTemplate="5,10,15">
@@ -43,9 +44,9 @@
                         <h:outputText value="#{item.name}" />
                     </p:column>
                     <p:column headerText="Acciones" style="width:100px">
-                        <p:commandButton action="#{managedReaders.edit(item)}" id="editReader" update="readerContainer" icon="pi pi-pencil" title="Editar" />
+                        <p:commandButton action="#{readersController.edit(item)}" id="editReader" update="readerContainer" icon="pi pi-pencil" title="Editar" />
                         <p:commandButton oncomplete="PF('deleteModal').show()" id="deleteReader" update="frmDelete" icon="pi pi-times" title="Borrar" >
-                            <f:setPropertyActionListener target="#{managedReaders.reader}" value="#{item}"/>
+                            <f:setPropertyActionListener target="#{readersController.reader}" value="#{item}"/>
                         </p:commandButton>
                     </p:column>
                 </p:dataTable>
@@ -71,7 +72,7 @@
             <p:dialog id="deleteModal" header="Borrar" widgetVar="deleteModal" resizable="false" modal="true">
                 <h3>¿Desea borrar este lector?</h3>
                 <br />
-                <p:commandButton  value="Si" actionListener="#{managedReaders.delete()}" update=":grid-table" oncomplete="PF('deleteModal').hide();"/>
+                <p:commandButton  value="Si" actionListener="#{readersController.delete()}" update=":grid-table" oncomplete="PF('deleteModal').hide();"/>
                 <p:commandButton  value="No" onclick="PF('deleteModal').hide();"/>
             </p:dialog>
         </h:form>

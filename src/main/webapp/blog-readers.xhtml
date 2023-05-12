@@ -1,10 +1,95 @@
 <?xml version='1.0' encoding='UTF-8' ?>
 <!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-                template="./main.xhtml">
+                template="./main.xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
 
     <ui:define name="content">
-        The Blog readers
+        
+        <p:layout style="min-width:400px;height:100vh;">
+            <p:layoutUnit position="west" size="250">
+                <div style="padding:20px">
+                    <h:form id="blogsReadersContainer">
+                        <p:panelGrid >
+                            <f:facet name="header">
+                                <h1>Agregar/editar Lector del blog</h1>
+                            </f:facet>
+                            <br />
+
+                            <p:outputLabel value="Lector:" />
+                            <br/>
+                            <p:selectOneMenu id="readersSelector" value="#{blogsReadersController.reader.id}" style="display:block;" >
+                                <f:selectItem itemLabel="Seleccione uno" itemValue="" />
+                                <f:selectItems value="#{readersController.readersList}" var="reader" itemLabel="#{reader.name}" itemValue="#{reader.id}" />
+                            </p:selectOneMenu>
+                            <br/>
+                            <br/>
+                            <p:outputLabel value="Blog:" />
+                            <br/>
+                            <p:selectOneMenu id="blogsSelector" value="#{blogsReadersController.blog.id}" style="display:block;" >
+                                <f:selectItem itemLabel="Seleccione uno" itemValue="" />
+                                <f:selectItems value="#{blogsController.blogsList}" var="blog" itemLabel="#{blog.title}" itemValue="#{blog.id}" />
+                            </p:selectOneMenu>
+
+                            <br />
+                            <br />
+                            <p:commandButton value="Guardar" action="#{blogsReadersController.save()}" update=":grid-table :blogsReadersContainer" />
+                            <p:commandButton value="Cancelar" action="#{blogsReadersController.clean()}" update=":blogsReadersContainer"/>
+                        </p:panelGrid>
+                    </h:form>
+                </div>
+            </p:layoutUnit>
+
+            <p:layoutUnit position="center">
+                <p:dataTable value="#{blogsReadersController.blogsReadersList}" var="item" id="grid-table" rows="10" paginator="true"
+                 paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                 currentPageReportTemplate="{startRecord}-{endRecord} of {totalRecords} records"
+                 rowsPerPageTemplate="5,10,15">
+
+                    <p:column headerText="No." style="width:20px">
+                        <h:outputText value="#{item.id}" />
+                    </p:column>
+                    <p:column headerText="Lector">
+                        <h:outputText value="#{item.RId.name}" />
+                    </p:column>
+                    <p:column headerText="Blog">
+                        <h:outputText value="#{item.BId.title}" />
+                    </p:column>
+                    <p:column headerText="Acciones" style="width:100px">
+                        <p:commandButton action="#{blogsReadersController.edit(item)}" id="editBlogReader" update="blogsReadersContainer" icon="pi pi-pencil" title="Editar" />
+                        <p:commandButton oncomplete="PF('deleteModal').show()" id="deleteBlogReader" update="frmDelete" icon="pi pi-times" title="Borrar" >
+                            <f:setPropertyActionListener target="#{blogsReadersController.blogsReaders}" value="#{item}"/>
+                        </p:commandButton>
+                    </p:column>
+                </p:dataTable>
+            </p:layoutUnit>
+        </p:layout>
+        
+                    
+
+                    
+         
+                    
+        
+            
+        
+        
+    </ui:define>
+    
+    
+    
+    <ui:define name="modals">
+
+        <h:form id="frmDelete">
+            <p:dialog id="deleteModal" header="Borrar" widgetVar="deleteModal" resizable="false" modal="true">
+                <h3>¿Desea borrar este lector?</h3>
+                <br />
+                <p:commandButton  value="Si" actionListener="#{blogsReadersController.delete()}" update=":grid-table" oncomplete="PF('deleteModal').hide();"/>
+                <p:commandButton  value="No" onclick="PF('deleteModal').hide();"/>
+            </p:dialog>
+        </h:form>
     </ui:define>
 
 </ui:composition>
