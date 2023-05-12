@@ -10,18 +10,18 @@
 
 
 CREATE TABLE "public"."blogs" (
-    "id" int,
+    "id" serial,
     "title" varchar(50),
     "description" varchar(4000), 
 PRIMARY KEY ("id"));
 
 CREATE TABLE "public"."readers" (
-    "id" int,
-    "name" varchar(8), 
+    "id" serial,
+    "name" varchar(20), 
 PRIMARY KEY ("id"));
 
 CREATE TABLE "public"."blogs_readers" (
-    "id" int;
+    "id" serial,
     "r_id" int,
     "b_id" int, 
 PRIMARY KEY ("id"));
@@ -35,4 +35,8 @@ ALTER TABLE "public"."blogs_readers"
     REFERENCES "public"."blogs" ("id");
 
 
-CREATE TABLE "public"."users" ("id" serial,"username" varchar(20),"password" varchar(80), PRIMARY KEY ("id"));
+CREATE TABLE "public"."users" (
+    "id" serial,
+    "username" varchar(20),
+    "password" varchar(80), 
+PRIMARY KEY ("id"));
